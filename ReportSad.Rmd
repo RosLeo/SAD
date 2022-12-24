@@ -1,0 +1,464 @@
+---
+title: "Report SAD"
+author: "Genito Leone"
+date: "2023-01-09"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Dati sull'efficienza del carburante dal 1999 al 2008 per 38 modelli di auto popolari
+
+## Descrizione
+
+Il dataset "mpg" (Miles per Gallon) fornito con il pacchetto **`ggplot2`** in R contiene informazioni sull'efficienza del carburante di diverse automobili. Il dataset include le seguenti variabili:
+
+-   **`manufacturer`**: il produttore dell'automobile.
+
+-   **`model`**: il modello dell'automobile.
+
+-   **`displ`**: il volume dei cilindri dell'automobile, in litri.
+
+-   **`year`**: l'anno di produzione dell'automobile.
+
+-   **`cyl`**: il numero di cilindri dell'automobile.
+
+-   **`trans`**: il tipo di trasmissione dell'automobile.
+
+-   **`drv`**: il tipo di trazione dell'automobile (anteriore, posteriore o integrale).
+
+-   **`cty`**: il consumo di carburante in città, in miglia per gallone.
+
+-   **`hwy`**: il consumo di carburante in autostrada, in miglia per gallone.
+
+-   **`fl`**: il tipo di carburante utilizzato dall'automobile.
+
+-   **`class`**: la classe di dimensioni dell'automobile.
+
+Il dataset "mpg" è composto da 234 osservazioni, una per ogni automobile presente nel dataset. Utilizziamo questo dataset per esplorare la relazione tra l'efficienza del carburante e diverse caratteristiche delle automobili, come il produttore, il modello, il volume dei cilindri o il tipo di trasmissione.
+
+# Esplorazione dei dati
+
+## Installazione del pacchetto ggplot2
+
+Il primo passo è installare il pacchetto **`ggplot2`** utilizzando il comando **`install.packages("ggplot2")`** e quindi caricarlo in R utilizzando il comando **`library(ggplot2)`**.
+
+## Caricamento delle librerie
+
+```{r include=FALSE}
+library(ggplot2)
+library(plotly)
+library(dplyr)
+library(tidyverse)
+```
+
+## Import del dataset
+
+Eseguiamo il comando **`data(mpg)`** per caricare il dataset "mpg" in memoria.
+
+```{r}
+data(mpg)
+```
+
+## Panoramica del dataset
+
+Utilizziamo il comando **`head(mpg)`** per visualizzare le prime osservazioni del dataset. Questo ci darà un'idea di come sono strutturati i dati e delle variabili incluse nel dataset.
+
+```{r}
+head(df)
+```
+
+Il comando **`head()`** è utile per esplorare i dati e avere una panoramica delle osservazioni presenti nel dataset. Vogliamo visualizzare anche le ultime osservazioni del dataset, quindi utilizziamo il comando **`tail(mpg)`**.
+
+```{r}
+tail(mpg)
+```
+
+Vogliamo visualizzare un numero specifico di osservazioni, quindi utilizziamo il comando **`head(mpg, n)`**, dove **`n`** è il numero di osservazioni che vuoi visualizzare.
+
+```{r}
+head(mpg, 10)
+```
+
+## Pulizia dei dati
+
+La pulizia dei dati consiste nel processo di verifica e correzione dei dati contenuti in un dataset al fine di garantirne la qualità e la validità per un'analisi statistica. La pulizia dei dati può includere diverse attività, come:
+
+-   Rimozione dei valori mancanti: si verifica la presenza di valori mancanti (NA) nel dataset e si sceglie come gestirli, ad esempio eliminandoli o sostituendoli con valori sostitutivi.
+
+-   Correzione dei valori errati: si verifica la presenza di valori errati o anomali nel dataset e si sceglie come gestirli, ad esempio eliminandoli o sostituendoli con valori sostitutivi.
+
+-   Trasformazione delle variabili: si verifica il tipo di dati per ogni variabile (ad esempio, numerico, carattere, data) e si effettua eventualmente la trasformazione.
+
+-   Creazione di nuove variabili: si creano nuove variabili derivate dalle variabili esistenti, ad esempio calcolando il rapporto tra due variabili o creando una variabile binaria a partire da una variabile categoriale.
+
+### Verifica della presenza di valori mancanti
+
+Verificare la presenza di NA nel dataset, dunque procediamo con il comando **`sum(is.na(mpg))`** per contare il numero di valori mancanti.
+
+```{r}
+sum(is.na(mpg))
+```
+
+Non sono presenti valori nulli nel data frame. In caso contrario avremmo potuto scegliere di sostituirli con la media o la moda, nel caso fossero stati valori numerici.
+
+Agli altri step non è dedicato nessun paragrafo in quanto non serve affrontarli. Non ci sono valori errati, come sarà possibile vedere nel summary mostrato successivamente nel report. Non c'è bisogno di effettuare nessuna trasformazione di tipo in quanto ognuno è coerente. Non vediamo il bisogno di creare nuove variabili.
+
+## Descrizione del dataset
+
+Utilizziamo il comando **`str(mpg)`** per visualizzare una descrizione delle variabili del dataset. Questo ci mostrerà il tipo di dati di ogni variabile (ad esempio, numerico o carattere) e il numero di osservazioni presenti per ogni variabile.
+
+```{r}
+str(mpg)
+```
+
+Il comando **`str()`** è utile per ottenere informazioni sulla struttura del dataset e sulla tipologia di dati contenuti in ogni variabile. Ad esempio, dalla descrizione delle variabili del dataset "mpg" mostrata sopra, possiamo vedere che la variabile **`manufacturer`** è di tipo carattere (**`chr`**), ovvero una stringa di testo, mentre la variabile **`year`** è di tipo intero (**`int`**), ovvero un numero intero.
+
+In R, il tipo numerico (**`numeric`**), come la variabile **`displ`**, rappresenta i numeri con la virgola mobile, ovvero i numeri con decimale. Ad esempio, 3.141592 è un numero numerico.
+
+Il tipo intero (**`integer`**) rappresenta invece i numeri interi, lo sono ad esempio **`year`** **`cyl`** ,ovvero i numeri senza decimale. Ad esempio, 3 è un numero intero.
+
+## Panoramica delle variabili
+
+Utilizzando il comando **`summary(mpg)`** otteniamo una panoramica delle statistiche descrittive per ogni variabile del dataset.
+
+```{r}
+summary(mpg)
+```
+
+La funzione **`summary()`** calcola automaticamente alcune statistiche di base per ogni variabile, come ad esempio il valore minimo, il valore massimo, la media, la mediana e la deviazione standard. Se la variabile è di tipo numerico, verranno calcolate anche il quartile e il range interquartile. Se la variabile è di tipo carattere o factor, verrà conteggiato il numero di osservazioni per ogni livello o valore univoco della variabile. La funzione **`summary()`** è utile per ottenere una panoramica delle caratteristiche dei dati contenuti in un dataset. Ad esempio, dall'output della funzione **`summary()`** per il dataset "mpg" possiamo vedere il numero di osservazioni per ogni variabile (ad esempio, "Length:234" indica che ci sono 234 osservazioni per ogni variabile), il tipo di dati contenuti in ogni variabile (ad esempio, "Class :character" indica che la variabile è di tipo carattere) e alcune statistiche di base per ogni variabile (ad esempio, "Min. :1.600" indica il valore minimo della variabile, "1st Qu.:2.400" indica il primo quartile, "Median :3.300" indica la mediana e così via).
+
+## Tabelle di frequenza
+
+Utilizziamo il comando **`table(mpg$variabile)`** per ottenere il conteggio delle osservazioni per ogni categoria di una variabile. Ad esempio, **`table(mpg$cyl)`** ti fornirà il conteggio delle osservazioni per il numero di cilindri per ogni automobile.
+
+La funzione **`table()`** è utile anche per ottenere una panoramica delle caratteristiche di una variabile e per individuare eventuali problemi o incongruenze nei dati. Ad esempio, se una variabile contiene molti valori mancanti o valori anomali, questi verranno segnalati nella tabella di frequenze.
+
+### Manufacturer
+
+```{r}
+df <- data.frame(table(mpg$manufacturer))
+names(df)[1] <- "manufacturer"
+df
+```
+
+La variabile "Manufacturer" è di tipo carattere o factor e contiene diversi nomi di produttori (ad esempio, "Ford", "Toyota", "Nissan"), la tabella di frequenze mostrerà il numero di osservazioni per ogni produttore.
+
+## Visualizzazione dei dati
+
+Visualizzare i dati attraverso grafici serve a diverse finalità:
+
+1.  Facilitare la comprensione dei dati: i grafici possono aiutare a rappresentare in modo visivo i dati e a renderli più facili da comprendere. Ad esempio, un grafico a barre può mostrare facilmente le frequenze di una variabile categoriale, mentre un grafico a linee può mostrare l'evoluzione di una variabile nel tempo.
+
+2.  Individuare pattern e tendenze: i grafici possono aiutare a individuare pattern e tendenze nei dati, che altrimenti potrebbero essere difficili da rilevare dall'analisi dei dati in forma tabellare.
+
+3.  Fare confronti e raffronti: i grafici possono consentire di fare confronti e raffronti tra diverse categorie o gruppi di dati, ad esempio confrontando le frequenze di diverse variabili.
+
+4.  Comunicare i risultati: i grafici possono essere utilizzati per comunicare i risultati di un'analisi a un pubblico più ampio, anche a persone che non sono esperte di statistica o di analisi dei dati. Ad esempio, un grafico può essere incluso in un report o in una presentazione, come in questo caso, per illustrare in modo chiaro e conciso i risultati di un'analisi.
+
+### Variabile manufacturer
+
+Per visualizzare la variabile "manufacturer" del dataset "mpg" con ggplot2, utilizziamo un grafico a barre e un grafico a torta. Entrambi questi grafici sono adatti per visualizzare le frequenze di una variabile di tipo carattere o factor, come la variabile "manufacturer".
+
+#### Grafico a Barre
+
+Il grafico a barre è un tipo di grafico utilizzato per visualizzare le frequenze di una variabile di tipo carattere o factor. In particolare, ogni barra del grafico rappresenta il numero di osservazioni per un determinato livello o valore univoco della variabile.
+
+```{r}
+p <- ggplot(mpg, aes(x = manufacturer)) +
+     geom_bar(color = "black", fill = "white") + theme(axis.text.x = element_text(angle = 90))
+
+p <- p + theme(panel.background = element_rect(fill = '#f0e2a8', color = '#9a8262'), 
+               panel.grid.major = element_line(color = '#ffffff', linetype = 'longdash'),
+               panel.grid.minor = element_line(color = '#fff68f', size = 0.7,linetype = "dotdash")) 
+
+p
+```
+
+Il comando ha prodotto un grafico a barre che visualizza il numero di osservazioni per ogni produttore di auto presente nella variabile "manufacturer".
+
+Il grafico a barre è utile per ottenere una panoramica delle caratteristiche di una variabile e per individuare eventuali tendenze o pattern nei dati. Ad esempio, se un produttore di auto è presente in molti più casi rispetto agli altri, questo potrebbe indicare che è più popolare o diffuso.
+
+#### Grafico a Torta
+
+Il grafico a torta (o grafico a settori) è un tipo di grafico utilizzato per visualizzare le frequenze di una variabile di tipo carattere o factor. In particolare, ogni settore della torta rappresenta la percentuale di osservazioni per un determinato livello o valore univoco della variabile.
+
+```{r}
+Manufacturer <- factor(mpg$manufacturer, ordered = T)
+ggplot(mpg, aes(x = "", y = manufacturer, fill = Manufacturer)) +
+  geom_bar(width = 1, stat = "identity") +
+  coord_polar("y") + theme_void()
+
+
+```
+
+Il grafico a torta mostra la distribuzione delle osservazioni per ogni produttore di auto presente nella variabile 'manufacturer' del dataset 'mpg'.
+
+LE PERCENTUALI SONO SBAGLIATE
+
+l grafico mostra che il produttore 'Toyota' è presente in circa il 20% delle osservazioni, seguito da 'Dodge' con il 15% e 'Ford' con il 10%.
+
+VEDI SE RIESCI AD INFILARCI LA LEGGE DI PARETO perché il 20% dei marchi hanno l'80% del mercato
+
+### Variabile model
+
+Anche in questo caso essendo la variabile categoriale procediamo con la rappresentazione attraverso un grafico a barre, mentre non verrà mostrato il grafico a torta in quanto è irrilevante, la presenza di così tante categorie non permetterebbe di distinguere l'una dall'altra.
+
+#### Grafico a barre
+
+```{r}
+ggplot(mpg, aes(x = model, fill = Manufacturer)) +
+  geom_bar()+ theme(axis.text.x = element_text(angle = 90))
+
+```
+
+### 
+
+### Variabile displ
+
+Per visualizzare i dati della variabile "displ" del dataset "mpg", utilizziamo un grafico a barre e un istogramma.
+
+#### Istogramma
+
+L'istogramma è un grafico che mostra la distribuzione delle frequenze di una variabile numerica. È utile per ottenere una panoramica delle caratteristiche della variabile, come la forma della distribuzione, il valore medio ecc.
+
+```{r}
+ggplot(mpg, aes(x = displ)) +
+  geom_histogram(bins = 20)
+
+```
+
+Se vuoi confrontare i valori della variabile "disp" tra le diverse categorie della variabile "class", puoi utilizzare un grafico a barre con i valori di "disp" come valori in ascissa e le categorie di "class" come valori in ordinata:
+
+```{r}
+library(ggplot2)
+ggplot(mpg, aes(x = class, y = displ)) +
+  geom_bar(stat = "identity")
+
+```
+
+1.  Grafico a dispersione: questo grafico mostra la relazione tra due variabili numeriche. Ad esempio, puoi utilizzare il grafico a dispersione per visualizzare come i valori di "displ" sono correlati ai valori di un'altra variabile numerica, come "cty" (città) o "hwy" (autostrada). Ecco come puoi creare un grafico a dispersione con la libreria ggplot2 in R:
+
+```{r}
+library(ggplot2)
+ggplot(mpg, aes(x = displ, y = cty)) +
+  geom_point()
+
+```
+
+2.  Boxplot: il boxplot è un grafico che mostra la distribuzione di una variabile numerica. È utile per individuare eventuali valori anomali o fuori dal range di normalità. Ecco come puoi creare un boxplot con la libreria ggplot2 in R:
+
+```{r}
+library(ggplot2)
+ggplot(mpg, aes(x = "", y = displ)) +
+  geom_boxplot()
+
+```
+
+3.  Density plot: il density plot è un grafico che mostra la distribuzione di una variabile numerica sotto forma di curva di densità. È utile per ottenere una panoramica della forma della distribuzione dei dati. Ecco come puoi creare un density plot con la libreria ggplot2 in R:
+
+```{r}
+ggplot(mpg, aes(x = displ)) +
+  geom_density()
+
+```
+
+### 
+
+### Variabile Year
+
+Innanzitutto applichiamo la funzione **`summary()`** per ottenere un riassunto delle statistiche di base per la variabile **`Year`**, come ad esempio la media, la mediana, il minimo e il massimo.
+
+```{r}
+summary(mpg$year)
+
+```
+
+Nel chunk successivo applichiamo la funzione **`hist()`** per creare un istogramma della variabile **`Year`**. L'istogramma ci aiuterà a visualizzare la distribuzione dei valori della variabile e a identificare eventuali outlier.
+
+```{r}
+hist(mpg$year)
+
+```
+
+Con la funzione **`boxplot()`** creiamo un grafico a scatola a baffi della variabile **`Year`**.
+
+```{r}
+boxplot(mpg$year)
+
+```
+
+Osservando la funzione **`table()`** notiamo che il numero di osservazioni per ogni valore della variabile **`Year`** è lo stesso infatti: 117 osservazioni sono state rilevate nel 1999 e altrettante 117 nel 2008.
+
+```{r}
+table(mpg$year)
+
+```
+
+Utilizzando la funzione **`quantile()`** otteniamo i quantili specifici della distribuzione dei valori della variabile **`Year`**. Avremo il primo quantile (25%), il secondo quantile (50%), il terzo quantile (75%) e il quarto quantile (100%) utilizzando i seguenti comandi:
+
+```{r}
+quantile(mpg$year, probs = c(0, 0.25, 0.5, 0.75, 1))
+
+```
+
+Applichiamo la funzione **`var()`** per calcolare la varianza dei valori della variabile **`Year`**. La varianza misura la dispersione dei valori intorno alla media.
+
+```{r}
+var(mpg$year)
+
+```
+
+Inoltre applicando la funzione **`sd()`** calcoliamo la deviazione standard dei valori della variabile **`Year`**. La deviazione standard è una misura della dispersione dei valori intorno alla media, ed è il radice quadrata della varianza.
+
+```{r}
+sd(mpg$year)
+
+```
+
+La funzione **`cor()`** calcola il coefficiente di correlazione tra la variabile **`Year`** e un'altra variabile del dataset **`mpg`**. Ad esempio, abbiamo calcolato il coefficiente di correlazione tra la variabile **`Year`** e la variabile **`hwy`** (consumi di carburante):
+
+```{r}
+cor(mpg$year, mpg$hwy)
+
+```
+
+Il coefficiente di correlazione sarà un valore compreso tra -1 e 1, dove un valore vicino a 1 indica una forte correlazione positiva, un valore vicino a -1 indica una forte correlazione negativa, e un valore vicino a 0 indica una scarsa correlazione.
+
+Infine, abbiamo usato le funzioni di visualizzazione come **`ggplot()`** del pacchetto **`ggplot2`** per creare grafici che mostrino le relazioni tra la variabile **`Year`** e altre variabili del dataset **`mpg`**. Ad esempio, abbiamo generato un grafico a dispersione (scatterplot) che mostri la relazione tra la variabile **`Year`** e la variabile **`hwy`** (consumi di carburante).
+
+```{r}
+ggplot(data = mpg) +
+  geom_point(mapping = aes(x = year, y = hwy))
+
+```
+
+### Variabile Cyl
+
+La variabile **`cyl`** del dataset **`mpg`** rappresenta il numero di cilindri del motore dei veicoli. Si tratta di una variabile categoriale, in quanto i valori possibili sono discreti e limitati.
+
+Per effettuare l'analisi della variabile **`cyl`**, è possibile includere il calcolo di statistiche di base come la media, la mediana, la varianza e la deviazione standard.
+
+```{r}
+data.frame(media = mean(mpg$cyl),mediana = median(mpg$cyl),varianza =  var(mpg$cyl),sd = sd(mpg$cyl))
+```
+
+Nel seguente chunk abbiamo creato un istogramma per visualizzare la distribuzione dei valori.
+
+```{r}
+p <- ggplot(data = mpg, mapping = aes(cyl)) + geom_bar(fill= c("#d62d20", "#ffa700", "#008744","#0057e7")) + ggtitle("Variabile cyl")
+
+p <- p + theme(panel.background = element_rect(fill = '#f0e2a8', color = "#9a8262"), panel.grid.major = element_line(color = '#ffffff', linetype="longdash"),panel.grid.minor = element_line(color = '#fff68f', size = 0.7,linetype = "dotdash"))
+
+p
+
+```
+
+Usando le funzioni di tabellazione del pacchetto **`tidyverse`** è possibile generare tabelle di frequenza che mostrino il numero o la percentuale di osservazioni per ogni valore della variabile **`cyl`**.
+
+Ad esempio abbiamo creato una tabella di frequenza per la percentuale di osservazioni per ogni numero di cilindri utilizzando il seguente codice:
+
+```{r}
+mpg %>%
+  group_by(cyl) %>%
+  summarize(freq = n()) %>%
+  mutate(perc_freq = round((percent = freq / sum(freq)*100),0))
+
+```
+
+Osservando il table possiamo affermare che il 35% dei veicoli ha il motore a 4 cilindri, il 34% a 6 cilindri, il 30% a 8 ed infine il 2% ha 5 cilindri nel motore.
+
+Usando le funzioni di tabellazione del pacchetto **`tidyverse`** inoltre è possibile anche creare tabelle incrociate che mostrino il numero o la percentuale di osservazioni per ogni combinazione di valori di due o più variabili. Ad esempio, abbiamo generato una tabella incrociata che mostri il numero di osservazioni per ogni combinazione di numero di cilindri e tipo di cambio (automatico o manuale) utilizzando il seguente codice:
+
+```{r}
+mpg %>%
+  count(cyl, trans)
+
+```
+
+### 
+
+Variabile trans
+
+La variabile **`trans`** del dataset **`mpg`** rappresenta il tipo di trasmissione dei veicoli. Si tratta di una variabile categoriale, in quanto i valori possibili sono discreti e limitati.
+
+Utilizzando il comando **`str(mpg$trans)`** verifichiamo il tipo di dati della variabile **`trans`** :
+
+```{r}
+str(mpg$trans)
+
+```
+
+### 
+
+### 
+
+### Variabile Hwy
+
+Usando le funzioni di statistica descrittiva come **`mean()`**, **`median()`** e **`sd()`** è possibile calcolare statistiche come la media, la mediana e la deviazione standard per le variabili del dataset. Ad esempio, abbiamo calcolato la media dei consumi di carburante per ogni tipo di carburante.
+
+```{r}
+mpg %>%
+  group_by(class) %>%
+  summarize(mean_hwy = mean(hwy),
+            median_hwy = median(hwy),
+            sd_hwy = sd(hwy))
+
+```
+
+Usando le funzioni di visualizzazione come **`ggplot()`** del pacchetto **`ggplot2`** è possibile creare grafici che mostrino le relazioni tra le variabili del dataset. Ad esempio, abbiamo creato un istogramma dei consumi di carburante (**`hwy`**) in base al tipo di carburante (**`class`**).
+
+```{r}
+ggplot(data = mpg) +
+  geom_histogram(mapping = aes(x = hwy, fill = class))
+
+```
+
+Ѐ possibile inoltre usare le funzioni di test statistico come **`t.test()`** per effettuare test sull'ipotesi. Ad esempio, abbiamo testato l'ipotesi che la media dei consumi di carburante per i veicoli con cilindrata superiore a 4 litri sia diversa da quella per i veicoli con cilindrata inferiore o uguale a 4 litri.
+
+```{r}
+mpg_high_disp = mpg %>% filter(displ > 4)
+mpg_low_disp = mpg %>% filter(displ <= 4)
+
+t.test(mpg_high_disp$hwy, mpg_low_disp$hwy)
+
+```
+
+Infine usando la funzione **`knitr::kable()`** creiamo una tabella riassuntiva delle statistiche calcolate e dei risultati dei test.
+
+```{r}
+mpg_summary = mpg %>%
+  group_by(class) %>%
+  summarize(mean_hwy = mean(hwy),
+            median_hwy = median(hwy),
+            sd_hwy = sd(hwy))
+
+knitr::kable(mpg_summary)
+
+```
+
+# Modello di regressione lineare
+
+Il dataset "mpg" fornito con il pacchetto **`ggplot2`** in R potrebbe essere adeguato per eseguire un'analisi di regressione lineare multipla, a seconda della domanda di ricerca o dell'ipotesi che vuoi verificare. La regressione lineare multipla è un modello statistico che permette di indagare le relazioni tra più variabili indipendenti (chiamate anche "predictor" o "spiegative") e una variabile dipendente (chiamata anche "risposta").
+
+Per eseguire un'analisi di regressione lineare multipla, è importante che il dataset contenga almeno una variabile dipendente e due o più variabili indipendenti. Nel dataset "mpg", le variabili "cty" (consumo di carburante in città) e "hwy" (consumo di carburante in autostrada) potrebbero essere utilizzate come variabile dipendente, mentre le altre variabili del dataset (ad esempio, "manufacturer", "displ", "year", "cyl", "trans", "drv" e "class") potrebbero essere utilizzate come variabili indipendenti.
+
+Tieni presente che, per eseguire un'analisi di regressione lineare multipla, è importante che i dati soddisfino alcune assunzioni statistiche, come la linearità e la varianza costante. Se queste assunzioni non sono soddisfatte, potrebbe essere necessario trasformare o selezionare le variabili o utilizzare un modello di regressione alternativo.
+
+# 
+
+Analisi dei cluster
+
+# 
+
+Sì, è possibile utilizzare il dataset "mpg" fornito con il pacchetto **`ggplot2`** in R per eseguire un'analisi di clustering. L'analisi di clustering è una tecnica di machine learning che permette di raggruppare o "clusterizzare" gli osservazioni di un dataset in base alle loro caratteristiche o alle loro similitudini.
+
+Per eseguire un'analisi di clustering sul dataset "mpg", puoi utilizzare uno dei tanti algoritmi di clustering disponibili in R, come ad esempio il metodo di agglomerazione gerarchica, il metodo di k-means o il metodo di modellizzazione di densità. Per utilizzare questi algoritmi, dovrai prima selezionare le variabili del dataset "mpg" che vuoi utilizzare per l'analisi di clustering e quindi eseguire l'algoritmo di clustering utilizzando queste variabili come input.
+
+Tieni presente che, per ottenere risultati significativi dall'analisi di clustering, è importante scegliere accuratamente le variabili da utilizzare e valutare attentamente il numero di cluster ottenuti. Potrebbe essere necessario eseguire più analisi di clustering utilizzando diverse combinazioni di variabili o diverse impostazioni dell'algoritmo per ottenere risultati soddisfacenti.
+
+Spero che questa spiegazione ti sia d'aiuto. Se hai bisogno di ulteriore assistenza o hai altre domande, non esitare a chiedere.
