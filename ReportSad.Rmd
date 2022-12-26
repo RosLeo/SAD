@@ -140,6 +140,8 @@ La funzione **`table()`** è utile anche per ottenere una panoramica delle carat
 
 ### Manufacturer
 
+La variabile **`manufacturer`** del dataset **`mpg`** rappresenta il produttore del veicolo. Si tratta di una variabile categorica nominale, in quanto i valori possibili sono limitati e non possono essere ordinati in base alla loro posizione nella scala di valori. I valori possibili per la variabile **`manufacturer`** sono 15 categorie diverse, ad esempio "audi", "chevrolet", "dodge" e così via.
+
 ```{r}
 df <- data.frame(table(mpg$manufacturer))
 names(df)[1] <- "manufacturer"
@@ -147,6 +149,138 @@ df
 ```
 
 La variabile "Manufacturer" è di tipo carattere o factor e contiene diversi nomi di produttori (ad esempio, "Ford", "Toyota", "Nissan"), la tabella di frequenze mostrerà il numero di osservazioni per ogni produttore.
+
+### Model
+
+La variabile **`model`** del dataset **`mpg`** rappresenta il modello del veicolo. Si tratta di una variabile categoriale, in quanto i valori possibili sono discreti e limitati.
+
+```{r}
+df <- data.frame(Freq = c(table(mpg$model)),
+           Perc_freq = c(table(mpg$model)/length(mpg$model)*100))
+df
+
+```
+
+*Toyota tacome 4wd* è il modello di veicolo più frequente in questo dataset mentre il modello *4runner 4wd* è il meno diffuso.
+
+Del modello *caravan 2wd* ne sono presenti 11 veicoli dunque il 5% mentre il modello *a4* costituisce il 3% del set di dati.
+
+### Displ
+
+La variabile **`displ`** del dataset **`mpg`** rappresenta la cilindrata del motore del veicolo, ovvero il volume delle camere di combustione, misurato in pollici cubici (in). Si tratta di una variabile quantitativa continua.
+
+```{r}
+df <- data.frame(Freq = c(table(mpg$displ)),
+           Perc_freq = c(table(mpg$displ)/length(mpg$displ)*100))
+df
+
+```
+
+Tutti i valori presenti nella tabella in alto rappresentano la cilindrata del motore dei veicoli. *7* è il valore della cilindrata più alto e ne è caratterizzato solo un veicolo ovvero solo *0.5%*. La cilindrata più bassa è *1.6* e 5 veicoli ne sono dotati ovvero il 2% dell'intero set di dati.
+
+### Year
+
+La variabile **`year`** del dataset **`mpg`** rappresenta l'anno di produzione del veicolo. Si tratta di una variabile quantitativa discreta, in quanto i valori possibili sono limitati e non possono assumere valori intermedi.
+
+```{r}
+df <- data.frame(Freq = c(table(mpg$year)),
+           Perc_freq = c(table(mpg$year)/length(mpg$year)*100))
+df
+
+```
+
+Dalla tabella di frequenza in alto possiamo notare che il *50%* dei veicoli è stato prodotto nel 1999 mentre l'altro *50%* nel 2008.
+
+### Cyl
+
+La variabile **`cyl`** del dataset **`mpg`** rappresenta il numero di cilindri del motore del veicolo. Si tratta di una variabile quantitativa discreta, in quanto i valori possibili sono limitati e non possono assumere valori intermedi.
+
+```{r}
+df <- data.frame(Freq = c(table(mpg$cyl)),
+           Perc_freq = c(table(mpg$cyl)/length(mpg$cyl)*100))
+df
+
+```
+
+I valori elencati sono il numero di cilindri del motore dei veicoli, possiamo notare che il *35%* dei veicoli ha un numero di cilindri pari a 4, 70 auto circa il *30%* ha un motore a 8 cilindri, 4 veicoli sono dotati di un motore a 5 cilindri ed infine il *34%* delle auto ha un motore a 6 cilindri.
+
+### Trans
+
+La variabile **`trans`** del dataset **`mpg`** rappresenta il tipo di trasmissione del veicolo. Si tratta di una variabile categorica ordinale, in quanto i valori possibili sono limitati e possono essere ordinati in base alla loro posizione nella scala di valori.
+
+```{r}
+df <- data.frame(Freq = c(table(mpg$trans)),
+           Perc_freq = c(table(mpg$trans)/length(mpg$trans)*100))
+df
+
+```
+
+I valori presenti in questa tabella rappresentano il tipo di trasmissione dei veicoli: 83 veicoli ovvero *36%* del dataset hanno il tipo di trasmissione *auto(l4)*, circa il *25%* sono caratterizzati dalla trasmissione *manual(m5)*, 39 auto invece dalla trasmissione *auto(l5)*.
+
+### Drv
+
+La variabile **`drv`** del dataset **`mpg`** rappresenta il tipo di trazione del veicolo. Si tratta di una variabile categorica nominale, in quanto i valori possibili sono limitati e non possono essere ordinati in base alla loro posizione nella scala di valori. I valori possibili per la variabile **`drv`** sono "f", "r" e "4", che indicano rispettivamente trazione anteriore, trazione posteriore e trazione integrale.
+
+```{r}
+df <- data.frame(Freq = c(table(mpg$drv)),
+           Perc_freq = c(table(mpg$drv)/length(mpg$drv)*100))
+df
+
+```
+
+103 auto dunque il *44%* possiedono la trazione integrale, il *45%* dunque 106 auto hanno la trazione anteriore infine 25 veicoli il *10%* sono caratterizzati dalla trazione posteriore.
+
+### Cty
+
+La variabile **`cty`** del dataset **`mpg`** rappresenta il numero di miglia per gallone che un veicolo può percorrere in città. Si tratta di una variabile quantitativa continua, in quanto i valori possibili sono numeri reali che possono assumere valori intermedi.
+
+```{r}
+df <- data.frame(Freq = c(table(mpg$cty)),
+           Perc_freq = c(table(mpg$cty)/length(mpg$cty)*100))
+df
+
+```
+
+35 è il numero massimo di miglia per gallone che 1 auto del nostro dataset può percorrere in città, il numero minimo di miglia per gallone che 5 auto (*2%*) del nostro set di dati possono fare in città è 9.
+
+### Hwy
+
+La variabile **`hwy`** del dataset **`mpg`** rappresenta il numero di miglia per gallone che un veicolo può percorrere su strada. Si tratta di una variabile quantitativa continua, in quanto i valori possibili sono numeri reali che possono assumere valori intermedi.
+
+```{r}
+df <- data.frame(Freq = c(table(mpg$hwy)),
+           Perc_freq = c(table(mpg$hwy)/length(mpg$hwy)*100))
+df
+
+```
+
+2 auto del dataset dunque l'1% riescono a percorrere 44 miglia per gallone su strada, il 2% ovvero 12 auto coprono solo 12 miglia per gallone su strada e cosi via.
+
+### Fl
+
+La variabile **`fl`** del dataset **`mpg`** rappresenta il tipo di carburante utilizzato dal veicolo. Si tratta di una variabile categorica nominale, in quanto i valori possibili sono limitati e non possono essere ordinati in base alla loro posizione nella scala di valori. I valori possibili per la variabile **`fl`** sono "p", "c", "e", "r" e "d", che indicano rispettivamente: carburante premium, carburante normale (etanolo 85), elettricità, carburante regolare e diesel.
+
+```{r}
+df <- data.frame(Freq = c(table(mpg$fl)),
+           Perc_freq = c(table(mpg$fl)/length(mpg$fl)*100))
+df
+
+```
+
+Dalla tabella di frequenza possiamo notare che 1 auto usa il carburante normale per viaggiare, il gasolio premium lo usano il *22%* circa di veicoli dunque 52 auto, il carburante regolare è quello più comune infatti 168 auto ovvero 168 veicoli ne fanno uso infine 8 auto si riforniscono con l'elettricità e 5 veicoli con il diesel.
+
+### Class
+
+La variabile **`class`** del dataset **`mpg`** rappresenta la classe di veicolo a cui appartiene il veicolo. Si tratta di una variabile categorica nominale, in quanto i valori possibili sono limitati e non possono essere ordinati in base alla loro posizione nella scala di valori. I valori possibili per la variabile **`class`** sono 19 categorie diverse, ad esempio "suv", "pickup", "minivan" e così via.
+
+```{r}
+df <- data.frame(Freq = c(table(mpg$class)),
+           Perc_freq = c(table(mpg$class)/length(mpg$class)*100))
+df
+
+```
+
+La classe di veicolo più frequente è *suv* infatti di questa classe sono presenti 62 auto dunque il *25%*, 5 veicoli circa il *2%* appartiene alla classe di veicolo *2seater* e così via.
 
 ## Visualizzazione dei dati
 
